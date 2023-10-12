@@ -1,0 +1,22 @@
+### Code ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# The following section merged from CDK .gitignore.
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+# Ignore cdk.context.json
+cdk.context.json
+
+# Ignore dist
+dist

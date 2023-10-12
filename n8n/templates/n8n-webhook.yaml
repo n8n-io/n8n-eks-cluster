@@ -1,0 +1,42 @@
+{{- if eq .Values.n8n.deploymentMode "scale" }}
+{{- $deploymentName := "n8n-webhook" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $deploymentName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: {{ $deploymentName }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        service: {{ $deploymentName }}
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: webhook
+          image: n8nio/n8n:{{ .Values.n8n.imageTag }}
+          args: ["webhook"]
+          envFrom:
+          - configMapRef:
+              name: n8n-configmap-env
+          resources:
+            limits:
+              memory: {{ .Values.resources.memoryLimit }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $deploymentName }}
+spec:
+  type: ClusterIP
+  selector:
+    service: {{ $deploymentName }}
+  ports:
+    - port: 5678
+{{- end }}

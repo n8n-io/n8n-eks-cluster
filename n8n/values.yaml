@@ -1,0 +1,14 @@
+n8n:
+  imageTag: latest
+  domainName: test.8n8.io
+  encryptionKey: change-this
+  deploymentMode: scale # single or scale
+  storageSize: 10Gi
+  db:
+    name: n8n
+    user: n8n
+    password: change-this
+  concurrency: 20
+
+resources:
+  memoryLimit: 1Gi

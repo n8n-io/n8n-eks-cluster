@@ -1,0 +1,25 @@
+{
+  "app": "pnpx ts-node --prefer-ts-exts bin/n8n-eks-cluster.ts",
+  "versionReporting": false,
+  "pathMetadata": false,
+  "watch": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      "README.md",
+      "cdk*.json",
+      "**/*.d.ts",
+      "**/*.js",
+      "tsconfig.json",
+      "package*.json",
+      "pnpm-lock.yaml",
+      "node_modules"
+    ]
+  },
+  "context": {
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:stackRelativeExports": true,
+    "@aws-cdk/core:checkSecretUsage": true
+  }
+}
