@@ -4,7 +4,7 @@ metadata:
   name: n8n-configmap-env
 data:
   N8N_PORT: "5678"
-  WEBHOOK_URL: https://{{ .Values.n8n.domainName }}
+  WEBHOOK_URL: https://{{.Release.Name}}.{{ .Values.n8n.baseDomainName }}
   N8N_ENCRYPTION_KEY: {{ .Values.n8n.encryptionKey }}
   N8N_PUSH_BACKEND: "sse"
   CODE_DISABLE_STDOUT: "true"

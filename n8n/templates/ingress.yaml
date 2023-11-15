@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: {{ .Values.n8n.domainName }}
+    - host: {{.Release.Name}}.{{ .Values.n8n.baseDomainName }}
       http:
         paths:
           {{- if eq .Values.n8n.deploymentMode "scale" }}

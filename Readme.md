@@ -42,7 +42,7 @@ For this example, we'll go with the name `test`, and the domain `8n8.io`
 
 You can customize the instance by changing the values in `n8n/values.yaml`.
 
-- `n8n.domainName`: This the fully-qualified domain name for the instance
+- `n8n.baseDomainName`: This the base domain name for all instances. Every instance gets a subdomain based on the instance name and this base domain.
 - `n8n.encryptionKey`: This is the encryption key that n8n uses to encrypt all it's data.
 - `n8n.deploymentMode`:
   - When set to `single`, this will deploy a single instance, and use sqlite as the DB (backed by an EBS for persistence). This can be used for test/staging instances, but not recommended to be used for production workloads.

@@ -1,6 +1,6 @@
 n8n:
   imageTag: latest
-  domainName: test.8n8.io
+  baseDomainName: 8n8.io
   encryptionKey: change-this
   deploymentMode: scale # single or scale
   storageSize: 10Gi
