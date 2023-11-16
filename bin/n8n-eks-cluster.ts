@@ -9,7 +9,7 @@ import {
 } from '@aws-quickstart/eks-blueprints'
 import assert = require('assert')
 
-const domainName = process.env.DOMAIN_NAME //?? '8n8.io'
+const domainName = process.env.DOMAIN_NAME ?? 'aws.8n8.io'
 const region = process.env.AWS_REGION ?? 'eu-central-1'
 
 assert(domainName, 'DOMAIN_NAME env variable not set')

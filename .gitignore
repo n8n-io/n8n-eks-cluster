@@ -20,3 +20,4 @@ cdk.context.json
 
 # Ignore dist
 dist
+.vscode/settings.json

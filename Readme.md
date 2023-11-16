@@ -21,7 +21,7 @@ After setting these up, and cloning this repo, go through the following steps to
 
 1. run `corepack prepare --activate` to tell Node.js to setup the correct version of the package manager used in this repo.
 2. run `pnpm install` to install all the dependencies
-3. run `pnpm deploy` to deploy the Cloudformation stack that includes the EKS cluster, and all the addons needed for it.
+3. run `pnpm run deploy` to deploy the Cloudformation stack that includes the EKS cluster, and all the addons needed for it.
 
 Once the deploy process is finished (it can take between 10-20 minutes), you'll see a `aws eks update-kubeconfig ...` in the console. Run that command to setup the `kubectl` context, to be able to talk to the Kubernetes API.
 
@@ -31,12 +31,12 @@ Once these steps are done, you will have a fully functional Kubernetes cluster w
 
 To deploy an n8n instance, you first need to pick a name for the instance.
 This name will be used in naming resources, and also for DNS.
-For this example, we'll go with the name `test`, and the domain `8n8.io`
+For this example, we'll go with the name `test`, and the domain `aws.8n8.io`
 
 1. Create a namespace to deploy all instance specific resources into: `kubectl create namespace test`.
 2. Customize `n8n/values.yaml` to customize the instance.
 3. Deploy the instance with `helm install -n test test n8n --wait --timeout=180s`, and wait a couple of minutes for the command to finish.
-4. Go to https://test.8n8.io/ to access the instance.
+4. Go to https://test.aws.8n8.io/ to access the instance.
 
 ### Customizing the instance
 
