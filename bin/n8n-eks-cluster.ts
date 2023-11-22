@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register'
-import { App } from 'aws-cdk-lib'
+import { App, aws_ec2, aws_eks } from 'aws-cdk-lib'
 import {
   addons,
   AckServiceName,
+  MngClusterProvider,
   CreateCertificateProvider,
   EksBlueprint,
   LookupHostedZoneProvider,
@@ -21,6 +22,13 @@ EksBlueprint.builder()
   .resourceProvider('hostedZone', new LookupHostedZoneProvider(domainName))
   .resourceProvider('rootCert', new CreateCertificateProvider('rootCert', domainName, 'hostedZone'))
   .resourceProvider('wildcardCert', new CreateCertificateProvider('wildcardCert', `*.${domainName}`, 'hostedZone'))
+  .clusterProvider(new MngClusterProvider({
+    id: 'n8n-eks-nodes',
+    minSize: 2,
+    maxSize: 4,
+    desiredSize: 2,
+    instanceTypes: [new aws_ec2.InstanceType('c6i.2xlarge')],
+  }))
   .addOns(
     new addons.VpcCniAddOn(),
     new addons.CoreDnsAddOn(),
@@ -46,10 +54,8 @@ EksBlueprint.builder()
       repository: "oci://public.ecr.aws/aws-controllers-k8s/rds-chart",
       managedPolicyName: "AmazonRDSFullAccess",
       createNamespace: true,
-    })
-    // new addons.CalicoOperatorAddOn(),
+    }),
     // new addons.ClusterAutoScalerAddOn(),
-    // new addons.ArgoCDAddOn(),
   )
   .useDefaultSecretEncryption(true)
   .build(new App(), 'n8n-eks-cluster')
