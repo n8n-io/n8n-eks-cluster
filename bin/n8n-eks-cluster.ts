@@ -3,6 +3,7 @@ import 'source-map-support/register'
 import { App } from 'aws-cdk-lib'
 import {
   addons,
+  AckServiceName,
   CreateCertificateProvider,
   EksBlueprint,
   LookupHostedZoneProvider,
@@ -34,6 +35,18 @@ EksBlueprint.builder()
     }),
     new addons.MetricsServerAddOn(),
     new addons.KubeProxyAddOn(),
+    new addons.AckAddOn({
+      id: "rds-ack",
+      serviceName: AckServiceName.RDS,
+      saName: "rds-chart",
+      name: "rds-chart",
+      chart: "rds-chart",
+      release: "rds-chart",
+      version: "1.1.8",
+      repository: "oci://public.ecr.aws/aws-controllers-k8s/rds-chart",
+      managedPolicyName: "AmazonRDSFullAccess",
+      createNamespace: true,
+    })
     // new addons.CalicoOperatorAddOn(),
     // new addons.ClusterAutoScalerAddOn(),
     // new addons.ArgoCDAddOn(),
