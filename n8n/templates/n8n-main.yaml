@@ -19,6 +19,7 @@ spec:
       containers:
         - name: main
           image: n8nio/n8n:{{ .Values.n8n.imageTag }}
+          imagePullPolicy: Always
           args: ["start"]
           envFrom:
           - configMapRef:

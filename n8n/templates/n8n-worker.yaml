@@ -20,6 +20,7 @@ spec:
       containers:
         - name: worker
           image: n8nio/n8n:{{ .Values.n8n.imageTag }}
+          imagePullPolicy: Always
           args: ["worker", "--concurrency={{ .Values.n8n.concurrency }}"]
           envFrom:
           - configMapRef:
