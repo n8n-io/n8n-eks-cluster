@@ -27,7 +27,7 @@ EksBlueprint.builder()
     minSize: 2,
     maxSize: 4,
     desiredSize: 2,
-    instanceTypes: [new aws_ec2.InstanceType('c6i.2xlarge')],
+    instanceTypes: [new aws_ec2.InstanceType('m5.large')],
   }))
   .addOns(
     new addons.VpcCniAddOn(),
