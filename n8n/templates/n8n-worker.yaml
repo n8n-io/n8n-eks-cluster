@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   name: {{ $deploymentName }}
 spec:
-  replicas: 3
+  replicas: 8
   selector:
     matchLabels:
       service: {{ $deploymentName }}

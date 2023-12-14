@@ -24,9 +24,9 @@ EksBlueprint.builder()
   .resourceProvider('wildcardCert', new CreateCertificateProvider('wildcardCert', `*.${domainName}`, 'hostedZone'))
   .clusterProvider(new MngClusterProvider({
     id: 'n8n-eks-nodes',
-    minSize: 2,
-    maxSize: 4,
-    desiredSize: 2,
+    minSize: 8,
+    maxSize: 10,
+    desiredSize: 8,
     instanceTypes: [new aws_ec2.InstanceType('m5.large')],
   }))
   .addOns(
