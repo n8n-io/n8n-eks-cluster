@@ -10,18 +10,44 @@ import {
   LookupHostedZoneProvider,
 } from '@aws-quickstart/eks-blueprints'
 import assert = require('assert')
+import { ACM } from 'aws-sdk';
 
 const domainName = process.env.DOMAIN_NAME ?? 'aws.8n8.io'
 const region = process.env.AWS_REGION ?? 'eu-central-1'
 
 assert(domainName, 'DOMAIN_NAME env variable not set')
 
-EksBlueprint.builder()
+async function checkCertificates(domain_name: string,) {
+  const acm = new ACM({ region }); 
+  try {
+    const certificates = await acm.listCertificates({}).promise();
+
+    let rootCertExists = false;
+    let wildcardCertExists = false;
+    
+    certificates.CertificateSummaryList?.forEach((cert) => {
+      if (cert.DomainName === domain_name) {
+        rootCertExists = true;
+      }
+      if (cert.DomainName === `*.${domain_name}`) {
+        wildcardCertExists = true;
+      }
+    });
+
+    return { rootCertExists, wildcardCertExists };
+  } catch (error) {
+    console.error("Error checking certificates:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
+
+(async () => {
+  const { rootCertExists, wildcardCertExists } = await checkCertificates(domainName);
+
+  const blueprint = EksBlueprint.builder()
   .version('auto')
   .region(region)
   .resourceProvider('hostedZone', new LookupHostedZoneProvider(domainName))
-  .resourceProvider('rootCert', new CreateCertificateProvider('rootCert', domainName, 'hostedZone'))
-  .resourceProvider('wildcardCert', new CreateCertificateProvider('wildcardCert', `*.${domainName}`, 'hostedZone'))
   .clusterProvider(new MngClusterProvider({
     id: 'n8n-eks-nodes',
     minSize: 8,
@@ -56,10 +82,19 @@ EksBlueprint.builder()
       createNamespace: true,
     }),
     // new addons.ClusterAutoScalerAddOn(),
-  )
-  .useDefaultSecretEncryption(true)
-  .build(new App(), 'n8n-eks-cluster')
+  );
+  
+  if (!rootCertExists) {
+    blueprint.resourceProvider('rootCert', new CreateCertificateProvider('rootCert', domainName, 'hostedZone'));
+  }
 
+  if (!wildcardCertExists) {
+    blueprint.resourceProvider('wildcardCert', new CreateCertificateProvider('wildcardCert', `*.${domainName}`, 'hostedZone'));
+  }
+
+  blueprint.useDefaultSecretEncryption(true)
+    .build(new App(), 'n8n-eks-cluster');
+})();
 
 /**
  * TODO:
