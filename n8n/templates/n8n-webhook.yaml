@@ -20,7 +20,6 @@ spec:
       containers:
         - name: webhook
           image: n8nio/n8n:{{ .Values.n8n.imageTag }}
-          imagePullPolicy: Always
           args: ["webhook"]
           envFrom:
           - configMapRef:

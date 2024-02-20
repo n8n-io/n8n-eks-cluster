@@ -1,5 +1,5 @@
 n8n:
-  imageTag: faster-webhooks
+  imageTag: latest
   baseDomainName: aws.8n8.io
   encryptionKey: change-this
   deploymentMode: scale # single or scale
