@@ -17,7 +17,7 @@ const region = process.env.AWS_REGION ?? 'eu-central-1'
 assert(domainName, 'DOMAIN_NAME env variable not set')
 
 EksBlueprint.builder()
-  .version('auto')
+  .version(aws_eks.KubernetesVersion.V1_28)
   .region(region)
   .resourceProvider('hostedZone', new LookupHostedZoneProvider(domainName))
   .resourceProvider('rootCert', new CreateCertificateProvider('rootCert', domainName, 'hostedZone'))
