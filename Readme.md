@@ -1,3 +1,8 @@
+# Disclaimer: This repo is not production-ready
+This repo only serves as a starting point to deploy n8n on top of AWS EKS in a scalable way.  
+However it is [missing some key things](#currently-not-implemented) before it could be considered production-ready.
+If you decide to deploy this to a production, please make sure to follow the infrastructure best practices in your organization.
+
 # Multi-instance n8n setup on AWS EKS
 
 This repo contains the code to:
@@ -53,3 +58,12 @@ You can customize the instance by changing the values in `n8n/values.yaml`.
 - `n8n.storageSize`: This is the size of the persistent storage volumes. Defaults to 10 GB.
 - `n8n.concurrency`: This determines how many parallel executions an n8n worker would process at any time. Defaults to 20.
 - `resources.memoryLimit`: This is set as the maximum memory available to any container in the system.
+
+
+## Currently Not Implemented
+- **External Postgres**: This setup currently deploy postgres as a container in the same namespace as n8n. This setup is missing key things for the database like high-availability, automatic backups, automatic failover, etc. We highly recommend using RDS or some other mature postgres deployment mechanism for any production usage.
+- **Pod autoscaling**: Underlying EC2 setup already uses autoscaling groups, however the kubernetes deployments of n8n aren't using any autoscaling mechanism yet. Until this is implemented, the kubernetes deployments need to be manually scaled.
+- **Secrets management**: The example encryption Key for n8n, and the database credentials for postgres are defined in [n8n/values.yaml](n8n/values.yaml). If you chose to deploy this to production, you'd need to modify these values manually, and make sure to not check in these values into this git repo. We are evaluating adding support for [AWS secrets manager](https://aws.amazon.com/secrets-manager/) and/or [External Secrets Operator](https://external-secrets.io), but there is currently no ETA on this.
+- **Multi-main**: In the current setup, while worker and webhook deployments can scale, there is only one container running the main API that the frontend talks to to. To make sure that this API is highly available, we need to switch over to a multi-main mode. This is already implemented in core n8n, and is currently under heavy testing. Once we deem it ready for production usage, we'll update this repo.
+- **Binary Data Storage on S3**: N8N can store workflow binary data either on S3 or on a local filesystem. This repo currently uses local filesystem backed by kubernetes persistent volumes. This needs to change before we can support multi-main mode in this repo. 
+- **Automatic Disaster Recovery**: This is out of scope for this repo.
